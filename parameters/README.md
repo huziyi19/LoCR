@@ -1,162 +1,159 @@
-# LFND: 大模型驱动的新闻假新闻检测系统
+## Project Overview
+This project implements a **fake news detection system** based on large language models (LLMs), integrating logical reasoning and graph neural network (GNN) technologies. The system verifies the authenticity of news content through two approaches:
 
-## 项目简介
+1. **Approach 1**: LLM-Only Comprehensive Judgment
+2. **Approach 2**: Full LoCR System (LLM + Logical Reasoning + Graph Neural Network + Iterative Correction)
 
-本项目实现了一个基于大语言模型的新闻假新闻检测系统，结合了逻辑推理和图神经网络技术。该系统通过以下方法对新闻进行真假检测：
+## Core Technologies
+- **Natural Language Processing (NLP)**: Leverages LLMs to evaluate the authenticity of individual sentences.
+- **Graph Neural Networks (GNNs)**: Constructs graph structures based on sentence similarity and performs feature propagation via Graph Convolutional Networks (GCNs).
+- **Logical Reasoning**: Adopts Natural Language Inference (NLI) models to detect logical relationships between sentences.
+- **Iterative Correction**: Identifies confidence score fluctuations and automatically corrects inconsistent judgments.
 
-1. **方法一**: 大模型综合判断 (LLM-Only)
-2. **方法二**: 完整LFND系统 (大模型 + 逻辑推理 + 图神经网络 + 迭代修正)
+## Supported Large Language Models
+The system supports the following LLMs via the **OpenRouter API**:
+- **deepseek/deepseek-chat** – DeepSeek Chat Model (Recommended Default)
+- **openai/gpt-4o-mini** – OpenAI GPT-4o Mini
+- **google/gemini-2.5-flash** – Google Gemini 2.5 Flash
+- **qwen/qwen3-32b** – Alibaba Cloud Tongyi Qianwen 3 32B Model
+- **meta-llama/llama-3.3-70b-instruct** – Meta Llama 3.3 70B Instruction-Tuned Model
 
-## 核心技术
+You can configure the target model in the `.env` file.
 
-- **自然语言处理**: 使用大模型进行句子真实性评估
-- **图神经网络**: 基于句子相似度构建图结构，使用GCN进行特征传播
-- **逻辑推理**: 利用自然语言推理(NLI)模型检测句子间的逻辑关系
-- **迭代修正**: 检测置信度变化并自动修正不一致的判断
-
-## 支持的大模型
-
-本系统支持以下大语言模型（通过OpenRouter API）：
-
-- **deepseek/deepseek-chat** - DeepSeek聊天模型（默认推荐）
-- **openai/gpt-4o-mini** - OpenAI GPT-4o Mini
-- **google/gemini-2.5-flash** - Google Gemini 2.5 Flash
-- **qwen/qwen3-32b** - 通义千问3 32B模型
-- **meta-llama/llama-3.3-70b-instruct** - Meta Llama 3.3 70B指令模型
-
-您可以在 `.env` 文件中配置使用的模型。
-
-## 项目结构
-
+## Project Structure
 ```
-├── data/                   # 数据文件夹
-│   ├── gossipcop/         # GossipCop数据集
-│   └── politifact/        # PolitiFact数据集
-├── LFND.py                # 主程序文件
-├── load_data.py           # 数据加载和预处理
-├── split_and_detect.py    # 句子分割和置信度检测
-├── text_to_graph.py       # 句子相似度图构建
-├── Logic_propagator.py    # 逻辑推理模块
-├── GCN_propagator.py      # 图卷积网络模块
-├── .env.example           # 环境变量模板
-├── requirements.txt       # 依赖包列表
-└── README.md             # 项目说明文档
+├── data/                   # Data directory
+│   ├── gossipcop/         # GossipCop dataset
+│   └── politifact/        # PolitiFact dataset
+├── LFND.py                # Main program file
+├── load_data.py           # Data loading and preprocessing
+├── split_and_detect.py    # Sentence segmentation and confidence detection
+├── text_to_graph.py       # Sentence similarity graph construction
+├── Logic_propagator.py    # Logical reasoning module
+├── GCN_propagator.py      # Graph Convolutional Network module
+├── .env.example           # Environment variable template
+├── requirements.txt       # Dependencies list
+└── README.md              # Project documentation
 ```
 
-## 安装说明
-
-### 实验环境
-
-- **操作系统**: Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-139-generic x86_64)
-- **Python版本**: Python 3.11.13
+## Installation Instructions
+### Experimental Environment
+- **Operating System**: Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-139-generic x86_64)
+- **Python Version**: Python 3.11.13
 - **GPU**: NVIDIA A100 80GB PCIe (CUDA Version: 13.0, Driver Version: 580.76.05)
-- **网络**: 稳定的互联网连接（用于API调用和模型下载）
+- **Network**: Stable internet connection (required for API calls and model downloads)
 
-### 安装步骤
+### Installation Steps
+1. Clone the repository to your local machine
+    ```bash
+    git clone <your-repository-url>
+    cd <your-project-directory>
+    ```
+2. Create and activate a virtual environment
+    ```bash
+    # Create virtual environment
+    python -m venv venv
+    # Activate on Linux/macOS
+    source venv/bin/activate
+    # Activate on Windows
+    venv\Scripts\activate
+    ```
+3. Install required dependencies
+    ```bash
+    pip install -r requirements.txt
+    ```
+4. Configure environment variables
+    ```bash
+    cp .env.example .env
+    # Edit the .env file and fill in your API key and model selection
+    ```
 
-1. 克隆项目到本地
-2. 创建并激活虚拟环境
-3. 安装依赖包
-```bash
-pip install -r requirements.txt
-```
+## Usage Instructions
+### Data Preparation
+1. Place the datasets in the `data/` directory.
+2. Supported formats:
+   - `.jsonl` format (e.g., GossipCop, PolitiFact)
+   - `.csv` format
 
-4. 配置环境变量
-```bash
-cp .env.example .env
-# 编辑 .env 文件，填入你的API密钥和模型选择
-```
+**Data Format Requirements**:
+| Field | Description |
+|-------|-------------|
+| `text` | Full content of the news article |
+| `label` | Ground truth label (`real` or `fake`) |
+| `id` | Optional, unique identifier for the news article |
+| `title` | Optional, title of the news article |
 
-## 使用说明
-
-### 数据准备
-
-1. 将数据集放入 `data/` 目录下
-2. 支持的格式：
-   - `.jsonl` 格式 (如 GossipCop, PolitiFact)
-   - `.csv` 格式
-
-数据格式要求：
-- `text`: 新闻正文内容
-- `label`: 真实标签 (`real` 或 `fake`)
-- `id`: 可选，新闻唯一标识符
-- `title`: 可选，新闻标题
-
-### 模型配置
-
-在 `.env` 文件中配置您的大模型：
-
+### Model Configuration
+Configure your target LLM in the `.env` file:
 ```bash
 # --- OpenRouter & LLM Configuration ---
-OPENROUTER_API_KEY=""
+OPENROUTER_API_KEY="your-api-key-here"
 OPENROUTER_MODEL="qwen/qwen3-32b"
 OPENROUTER_API_URL="https://openrouter.ai/api/v1/chat/completions"
 ```
 
-可选模型列表：
+**List of Optional Models**:
 - deepseek/deepseek-chat
 - openai/gpt-4o-mini
 - google/gemini-2.5-flash
 - qwen/qwen3-32b
 - meta-llama/llama-3.3-70b-instruct
 
-您可以直接修改 `OPENROUTER_MODEL` 字段来切换不同的模型。
+You can switch between different models by directly modifying the `OPENROUTER_MODEL` field.
 
-### 运行实验
-
-运行主程序进行批量检测：
+### Run Experiments
+Execute batch detection with the main program:
 ```bash
 python LFND.py
 ```
+The program will automatically perform the following steps:
+1. Load the datasets
+2. Run detection methods on each news article
+3. Output detailed comparative results
+4. Generate a final accuracy report
 
-程序将自动：
-1. 加载数据集
-2. 对每篇新闻执行检测方法
-3. 输出详细的比较结果
-4. 生成最终的准确率报告
+### Output Results
+The program outputs detailed detection results for each sample and a final accuracy comparison across all methods.
 
-### 输出结果
+## Core Algorithm Description
+### 1. Sentence Segmentation and Confidence Evaluation
+- Splits news text into semantically complete sentences using LLMs.
+- Assigns an authenticity confidence score (ranging from 0 to 1) to each sentence.
 
-程序会输出每个样本的详细检测结果，最终会输出各方法的准确率对比。
+### 2. Graph Construction
+- Builds graph structures based on the cosine similarity of sentence embeddings.
+- Edge weights represent the semantic similarity between connected sentences.
 
-## 核心算法说明
+### 3. Logical Reasoning
+- Detects entailment and contradiction relationships between sentences using NLI models.
+- Implements propagation for two types of logical relationships: **negation** and **entailment**.
 
-### 1. 句子分割与置信度评估
-- 使用大模型将新闻文本分割为语义完整的句子
-- 对每个句子进行0-1区间的真实性置信度评估
+### 4. Graph Convolution Propagation
+- Performs confidence score propagation on the similarity graph using GCNs.
+- Fills in missing confidence values for incomplete nodes.
 
-### 2. 图构建
-- 基于句子嵌入的余弦相似度构建图结构
-- 边权重表示句子间的语义相似度
+### 5. Iterative Correction
+- Identifies nodes with confidence score changes exceeding predefined thresholds.
+- Invokes LLMs to re-evaluate the authenticity of these sentences.
+- Iterates until convergence or the maximum number of iterations is reached.
 
-### 3. 逻辑推理
-- 使用NLI模型检测句子间的蕴含、矛盾关系
-- 实现"否定"和"蕴含"两种逻辑关系的传播
+## Dependency Description
+**Key Dependencies**:
+| Package | Function |
+|---------|----------|
+| `openai` | OpenAI API client |
+| `torch` | PyTorch deep learning framework |
+| `torch-geometric` | Graph neural network library |
+| `transformers` | Hugging Face Transformers library |
+| `sentence-transformers` | Sentence embedding models |
+| `networkx` | Graph processing library |
+| `numpy` | Numerical computation library |
+| `python-dotenv` | Environment variable management tool |
 
-### 4. 图卷积传播
-- 使用GCN在相似度图上进行置信度传播
-- 填补缺失的置信度值
+## Notes
+1. **API Quota**: Using the OpenRouter API requires a valid API key and sufficient quota.
+2. **Model Loading**: Pre-trained models will be downloaded automatically on the first run; a stable network connection is required.
+3. **Memory Usage**: Monitor memory consumption when processing large-scale datasets.
+4. **GPU Acceleration**: GPU usage is recommended to achieve faster inference speeds.
 
-### 5. 迭代修正
-- 检测置信度变化超过阈值的节点
-- 调用大模型重新评估这些句子
-- 迭代直到收敛或达到最大轮数
-
-## 依赖说明
-
-主要依赖包：
-- `openai`: OpenAI API客户端
-- `torch`: PyTorch深度学习框架
-- `torch-geometric`: 图神经网络库
-- `transformers`: Hugging Face transformers
-- `sentence-transformers`: 句子嵌入模型
-- `networkx`: 图处理库
-- `numpy`: 数值计算
-- `python-dotenv`: 环境变量管理
-
-## 注意事项
-
-1. **API配额**: 使用OpenRouter API需要有效的API密钥和足够的配额
-2. **模型加载**: 首次运行时会自动下载预训练模型，需要稳定的网络连接
-3. **内存使用**: 大规模数据处理时注意内存使用情况
-4. **GPU加速**: 建议使用GPU以获得更快的推理速度
+---
