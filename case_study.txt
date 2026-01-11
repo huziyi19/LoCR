@@ -1,0 +1,113 @@
+## 样本信息
+
+- **ID**: 9597
+- **数据集**: gossipcop
+- **真实标签**: fake
+- **标题**: Is There A Feud Brewing Between Zayn Malik  and  Harry Styles?
+- **文本长度**: 1498 字符
+- **句子数量**: 13 句
+
+## 文本内容
+
+> Zayn Malik and Harry Styles will always be linked in the public eye, as the two were the most prominent members of One Direction. That being said, it looks as though their relationship is growing strained as they pursue successful solo careers. According to HollywoodLife, Zayn is growing increasingly fearful that Harrys new solo material will outshine his own. A source close to the Pillow Talk singer revealed that hes been flying high on his success as a solo artist, but hes stressing now that Harrys coming out with a new album. Hes worried that Harry is going to steal his thunder and overshadow what hes worked so hard for. Check out the video teaser for Harrys debut single, due out April 7th. Play The source goes on to say that Out of all the 1D guys, Harry is the one Zayn has always felt the most competitive with, and with good reason. Hes been hearing from music insiders that Harrys new work is the bomb, its edgy, its different, and its going to dominate the charts. Zayns exit from the group was amicable in 2015, and there was never any ill will towards his One Direction peers, as he told The Sun: I feel like Im doing whats right right by myself and right by the boys, so I feel good. Nevertheless, will the stress of Harrys musical buzz lead to a legitimate musical feud? Both albums are tentatively scheduled for sometime this summer, only furthering what seems to be a competitive rollout in the making. In the meantime, listen to Zayns latest single, Still Got Time, below.
+
+## 结果对比
+
+### 1. LLM-Only
+- **预测**: real
+- **结果**: ❌ 错误
+
+### 2. Full LFND
+- **预测**: fake
+- **结果**: ✅ 正确
+
+## 图结构
+
+### 节点列表
+
+- [0] Zayn Malik and Harry Styles will always be linked in the public eye, as the two were the most prominent members of One Direction.
+- [1] That being said, it looks as though their relationship is growing strained as they pursue successful solo careers.
+- [2] According to HollywoodLife, Zayn is growing increasingly fearful that Harry’s new solo material will outshine his own.
+- [3] A source close to the Pillow Talk singer revealed that he’s been flying high on his success as a solo artist, but he’s stressing now that Harry’s coming out with a new album.
+- [4] He’s worried that Harry is going to steal his thunder and overshadow what he’s worked so hard for.
+- [5] Check out the video teaser for Harry’s debut single, due out April 7th.
+- [6] The source goes on to say that out of all the 1D guys, Harry is the one Zayn has always felt the most competitive with, and with good reason.
+- [7] He’s been hearing from music insiders that Harry’s new work is the bomb, it’s edgy, it’s different, and it’s going to dominate the charts.
+- [8] Zayn’s exit from the group was amicable in 2015, and there was never any ill will towards his One Direction peers.
+- [9] As he told The Sun: I feel like I’m doing what’s right by myself and right by the boys, so I feel good.
+- [10] Nevertheless, will the stress of Harry’s musical buzz lead to a legitimate musical feud?
+- [11] Both albums are tentatively scheduled for sometime this summer, only furthering what seems to be a competitive rollout in the making.
+- [12] In the meantime, listen to Zayn’s latest single, Still Got Time, below.
+
+### 相似度边
+
+- (0, 6) weight=0.5136
+- (2, 3) weight=0.5458
+- (2, 4) weight=0.5002
+- (2, 6) weight=0.5941
+- (2, 7) weight=0.5731
+- (3, 5) weight=0.5278
+- (3, 7) weight=0.6657
+- (4, 7) weight=0.5265
+- (5, 7) weight=0.5669
+- (7, 10) weight=0.5894
+
+### 逻辑边
+
+- (0 -> 6) label=imply
+- (6 -> 0) label=imply
+- (2 -> 4) label=imply
+- (4 -> 2) label=imply
+- (2 -> 7) label=imply
+- (7 -> 2) label=imply
+- (3 -> 5) label=imply
+- (5 -> 3) label=imply
+
+## 传播过程
+
+- **掩码节点（低置信度）**: [6, 0, 3, 2]
+- **保留节点**: [1, 4, 5, 7, 8, 9, 10, 11, 12]
+
+
+### 逻辑传播更新轨迹
+
+- 7 -> 2 (imply): None -> 0.85（2和4以及7都有imply关系，但7的置信度更高，优先7传播给2）
+- 5 -> 3 (imply): None -> 0.9
+
+### GCN 填充节点
+
+- 0: 0.4917
+- 6: 0.5306
+
+## 句子级置信度详情
+
+| 索引 | 初始 | 逻辑传播 | GCN传播 || 句子内容 |
+|------|------|----------|---------|----------|---------|----------|
+| 0 | 0.6000 | 0.6000 | 0.4917 |  Zayn Malik and Harry Styles will always be linked in the public eye, as the two were the most prominent members of One Direction. |
+| 1 | 0.7500 | 0.7500 | 0.7500 | That being said, it looks as though their relationship is growing strained as they pursue successful solo careers. |
+| 2 | 0.6500 | 0.8500 | 0.8500 | According to HollywoodLife, Zayn is growing increasingly fearful that Harry’s new solo material will outshine his own. |
+| 3 | 0.6000 | 0.9000 | 0.9000 | A source close to the Pillow Talk singer revealed that he’s been flying high on his success as a solo artist, but he’s stressing now that Harry’s coming out with a new album. |
+| 4 | 0.7800 | 0.7800 | 0.7800 | He’s worried that Harry is going to steal his thunder and overshadow what he’s worked so hard for. |
+| 5 | 0.9000 | 0.9000 | 0.9000 | Check out the video teaser for Harry’s debut single, due out April 7th. |
+| 6 | 0.6800 | 0.6800 | 0.5306 | The source goes on to say that out of all the 1D guys, Harry is the one Zayn has always felt the most competitive with, and with good reason. |
+| 7 | 0.8500 | 0.8500 | 0.8500 | He’s been hearing from music insiders that Harry’s new work is the bomb, it’s edgy, it’s different, and it’s going to dominate the charts. |
+| 8 | 0.8500 | 0.8500 | 0.8500 | Zayn’s exit from the group was amicable in 2015, and there was never any ill will towards his One Direction peers. |
+| 9 | 0.9000 | 0.9000 | 0.9000 | As he told The Sun: I feel like I’m doing what’s right by myself and right by the boys, so I feel good. |
+| 10 | 0.8000 | 0.8000 | 0.8000 | Nevertheless, will the stress of Harry’s musical buzz lead to a legitimate musical feud? |
+| 11 | 0.8000 | 0.8000 | 0.8000 | Both albums are tentatively scheduled for sometime this summer, only furthering what seems to be a competitive rollout in the making. |
+| 12 | 0.9500 | 0.9500 | 0.9500 | In the meantime, listen to Zayn’s latest single, Still Got Time, below. |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
